@@ -1,6 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
+const authenticationService = require('./authenticationService');
 
 var userService = (function () {
     var users = [
@@ -42,11 +43,12 @@ var userService = (function () {
         }
     }
 
-    function isPasswordValid(username, password) {
+    function login(username, password) {
         var user = getUserByUsername(username);
-        bcrypt.compare(password, user.password, function(error, result) {
+        bcrypt.compare(password, user.password).then(function(result) {
             if (result) {
                 console.log('Password is valid')
+                var token = authenticationService.createToken(user);
                 return user;
             }
             else {
@@ -56,7 +58,7 @@ var userService = (function () {
     }
 
     return {
-        isPasswordValid: isPasswordValid
+        login: login
     }
 })();
 

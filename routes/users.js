@@ -5,12 +5,13 @@ const responseModel = require('../models/response');
 const router = new express.Router();
 const userService = require('../services/userService');
 const baseRoute = "/users/";
+const config = require('../config');
 
 module.exports = router;
 
-router.post(baseRoute + 'login/:username' , isPasswordValid);
+router.post(config.routes.users + '/login' , isPasswordValid);
 
 function isPasswordValid(request, response) {
-    responseModel.data = userService.isPasswordValid(request.params.username,"secret");
+    console.log(userService.login(request.body.username,request.body.password));
     response.status(200).json(responseModel);
 }

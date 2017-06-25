@@ -1,26 +1,33 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const config = require('../config');
 
 var authenticationService = (function () {
-
     function isTokenValid(token) {
-        return true;
+        try {
+            return jwt.verify(token, config.jwt.password);
+        } catch(error) {
+            console.error(error);
+            return null;
+        }
     }
 
     function createToken(user) {
-        return "token token token!";
-    }
-
-    function encrypt(word) {
-        return bcrypt.hashSync(word, config.bcrypt.saltRounds);
+        var token = {
+            iss: 'Fusion Alliance',
+            aud: 'World',
+            username: user.username,
+            userId: user.id,
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * config.jwt.durationInHours),
+        };
+        return jwt.sign(token, config.jwt.password);
     }
 
     return {
         isTokenValid: isTokenValid,
-        createToken: createToken,
-        encrypt: encrypt
+        createToken: createToken
     }
 })();
 
