@@ -3,7 +3,8 @@
 module.exports = {
     routes: {
         root: '/api',
-        users: '/users'
+        users: '/users',
+        locations: '/locations'
     },
     server: {
         port: 8000
