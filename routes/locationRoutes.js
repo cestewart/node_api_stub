@@ -2,10 +2,10 @@
 
 const express = require('express');
 
-var routes = function(responseModel) {
+var routes = function(responseModel, locationService) {
     var locationRouter = express.Router();
 
-    const locationService = require('../services/locationService');
+//    const locationService = require('../services/locationService');
 
     locationRouter.get('/', getAllLocations);
 
@@ -25,5 +25,3 @@ var routes = function(responseModel) {
 }
 
 module.exports = routes;
-
-

@@ -1,9 +1,6 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
-const authenticationService = require('./authenticationService');
-
-var userService = (function () {
+var userService = function (bcrypt, authenticationService) {
     var users = [
         {
             id: 'd20ed1a1-4650-4d8f-9df7-5faa91363341',
@@ -55,6 +52,6 @@ var userService = (function () {
     return {
         login: login,
     }
-})();
+};
 
 module.exports = userService;

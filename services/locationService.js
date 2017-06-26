@@ -1,6 +1,6 @@
 'use strict';
 
-var locationService = (function () {
+var locationService = function () {
     var locations = [
         {
             id: 'c0b694ec-3352-43e3-9f22-77c87fe83d48',
@@ -34,6 +34,6 @@ var locationService = (function () {
         getAllLocations: getAllLocations,
         getLocation: getLocation
     }
-})();
+};
 
 module.exports = locationService;

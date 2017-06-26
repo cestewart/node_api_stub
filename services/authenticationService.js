@@ -1,9 +1,9 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-const config = require('../config');
+//const jwt = require('jsonwebtoken');
+//const config = require('../config');
 
-var authenticationService = (function () {
+var authenticationService = function (jwt, config) {
     function isTokenValid(request, response) {
         jwt.verify(request.headers['authorization'], config.jwt.password, function(error, decodedToken){
             if (error) {
@@ -31,6 +31,6 @@ var authenticationService = (function () {
         isTokenValid: isTokenValid,
         createToken: createToken
     }
-})();
+};
 
 module.exports = authenticationService;

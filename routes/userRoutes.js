@@ -2,10 +2,8 @@
 
 const express = require('express');
 
-var routes = function(responseModel){
+var routes = function(responseModel, userService){
     var userRouter = express.Router();
-
-    const userService = require('../services/userService');
 
     userRouter.post('/login' , login);
 
