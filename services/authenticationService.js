@@ -4,13 +4,15 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 
 var authenticationService = (function () {
-    function isTokenValid(token) {
-        try {
-            return jwt.verify(token, config.jwt.password);
-        } catch(error) {
-            console.error(error);
-            return null;
-        }
+    function isTokenValid(request, response) {
+        jwt.verify(request.headers['authorization'], config.jwt.password, function(error, decodedToken){
+            if (error) {
+                console.log('token is NOT valid');
+            } else {
+                console.log('token is valid');
+                response.decodedToken = decodedToken;
+            }
+        });
     }
 
     function createToken(user) {

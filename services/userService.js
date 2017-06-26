@@ -43,22 +43,17 @@ var userService = (function () {
         }
     }
 
-    function login(username, password) {
-        var user = getUserByUsername(username);
-        bcrypt.compare(password, user.password).then(function(result) {
-            if (result) {
-                console.log('Password is valid')
-                var token = authenticationService.createToken(user);
-                return user;
-            }
-            else {
-                console.log('Password is NOT valid')
-            }
-        });
+    function login(request) {
+        var user = getUserByUsername(request.body.username);
+        if (user === undefined) return null;
+        if (!bcrypt.compareSync(request.body.password, user.password)) return null;
+        user.password = null;
+        user.token = authenticationService.createToken(user);
+        return user;
     }
 
     return {
-        login: login
+        login: login,
     }
 })();
 

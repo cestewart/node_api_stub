@@ -4,14 +4,19 @@ const express = require('express');
 const responseModel = require('../models/response');
 const router = new express.Router();
 const userService = require('../services/userService');
-const baseRoute = "/users/";
 const config = require('../config');
 
 module.exports = router;
 
-router.post(config.routes.users + '/login' , isPasswordValid);
+router.post(config.routes.users + '/login' , login);
 
-function isPasswordValid(request, response) {
-    console.log(userService.login(request.body.username,request.body.password));
-    response.status(200).json(responseModel);
+function login(request, response) {
+    var user = userService.login(request);
+    if (user === null) {
+        responseModel.success = false;
+        response.status(403).json(responseModel);
+    } else {
+        responseModel.data = user;
+        response.status(200).json(responseModel);
+    }
 }
