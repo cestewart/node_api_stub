@@ -44,7 +44,6 @@ var userService = function (bcrypt, authenticationService) {
         var user = getUserByUsername(request.body.username);
         if (user === undefined) return null;
         if (!bcrypt.compareSync(request.body.password, user.password)) return null;
-        user.password = null;
         user.token = authenticationService.createToken(user);
         return user;
     }
