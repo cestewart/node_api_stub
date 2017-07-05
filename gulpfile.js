@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
-const config = require('./config');
+var config = require('./config');
+var gulpMocha = require('gulp-mocha')
 
 gulp.task('default', function(){
     nodemon({
@@ -16,3 +17,12 @@ gulp.task('default', function(){
     });
 });
 
+gulp.task('run-tests', function(){
+    gulp.src('tests/**/*.js', {read: false})
+        .pipe(gulpMocha({reporter: 'dot'}))
+    console.log('Finished at ' + Date())
+})
+
+gulp.task('test', function() {
+    gulp.watch('tests/**/*.js', ['run-tests'])
+});

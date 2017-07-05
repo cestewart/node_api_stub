@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 var userService = function (bcrypt, authenticationService) {
     var users = [
         {
@@ -33,11 +35,7 @@ var userService = function (bcrypt, authenticationService) {
     ];
 
     function getUserByUsername(username) {
-        for (var i = 0; i < users.length; i++) {
-            if (users[i].username === username) {
-                return users[i];
-            }
-        }
+        return _.find(users, {username:username});
     }
 
     function login(request) {
@@ -49,6 +47,7 @@ var userService = function (bcrypt, authenticationService) {
     }
 
     return {
+        getUserByUsername: getUserByUsername,
         login: login,
     }
 };

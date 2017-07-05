@@ -1,8 +1,5 @@
 'use strict';
 
-//const jwt = require('jsonwebtoken');
-//const config = require('../config');
-
 var authenticationService = function (jwt, config) {
     function isTokenValid(request, response) {
         jwt.verify(request.headers['authorization'], config.jwt.password, function(error, decodedToken){
@@ -16,6 +13,7 @@ var authenticationService = function (jwt, config) {
     }
 
     function createToken(user) {
+        if (user == null) return null;
         var token = {
             iss: 'Fusion Alliance',
             aud: 'World',

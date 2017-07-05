@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 var locationService = function () {
     var locations = [
         {
@@ -23,11 +25,7 @@ var locationService = function () {
     }
 
     function getLocation(id) {
-        for (var i = 0; i < locations.length; i++) {
-            if (locations[i].id === id) {
-                return locations[i];
-            }
-        }
+        return _.find(locations, {id:id})
     }
 
     return {
