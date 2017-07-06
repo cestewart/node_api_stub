@@ -1,8 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
-
-var userService = function (bcrypt, authenticationService) {
+var userService = function (bcrypt, _, authenticationService) {
     var users = [
         {
             id: 'd20ed1a1-4650-4d8f-9df7-5faa91363341',

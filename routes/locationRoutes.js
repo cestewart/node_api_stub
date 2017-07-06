@@ -2,22 +2,15 @@
 
 const express = require('express');
 
-var routes = function(responseModel, locationService) {
+var locationService = require('../services/locationService')(require('lodash'));
+var locationController = require('../controllers/locationController')(locationService, require('../models/response'));
+
+var routes = function() {
     var locationRouter = express.Router();
 
-    locationRouter.get('/', getAllLocations);
+    locationRouter.get('/', locationController.getAllLocations);
 
-    function getAllLocations(request, response) {
-        responseModel.data = locationService.getAllLocations();
-        response.status(200).json(responseModel);
-    }
-
-    locationRouter.get('/:id', getLocation);
-
-    function getLocation(request, response) {
-        responseModel.data = locationService.getLocation(request.params.id);
-        response.status(200).json(responseModel);
-    }
+    locationRouter.get('/:id', locationController.getLocation);
 
     return locationRouter;
 }

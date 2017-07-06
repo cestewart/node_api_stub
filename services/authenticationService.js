@@ -1,15 +1,12 @@
 'use strict';
 
 var authenticationService = function (jwt, config) {
-    function isTokenValid(request, response) {
-        jwt.verify(request.headers['authorization'], config.jwt.password, function(error, decodedToken){
-            if (error) {
-                console.log('token is NOT valid');
-            } else {
-                console.log('token is valid');
-                response.decodedToken = decodedToken;
-            }
-        });
+    function verifyToken(token) {
+        try {
+            return jwt.verify(token, config.jwt.password);
+        } catch(error) {
+            return null;
+        }
     }
 
     function createToken(user) {
@@ -26,7 +23,7 @@ var authenticationService = function (jwt, config) {
     }
 
     return {
-        isTokenValid: isTokenValid,
+        verifyToken: verifyToken,
         createToken: createToken
     }
 };

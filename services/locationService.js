@@ -1,8 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
-
-var locationService = function () {
+var locationService = function (_) {
     var locations = [
         {
             id: 'c0b694ec-3352-43e3-9f22-77c87fe83d48',

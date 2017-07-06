@@ -1,22 +1,15 @@
 'use strict';
 
-const express = require('express');
+var express = require('express');
 
-var routes = function(responseModel, userService){
+var authenticationService = require('../services/authenticationService')(require('jsonwebtoken'),require('../config'));
+var userService = require('../services/userService')(require('bcrypt'), require('lodash'), authenticationService);
+var userController = require('../controllers/userController')(userService, require('../models/response'));
+
+var routes = function(){
     var userRouter = express.Router();
 
-    userRouter.post('/login' , login);
-
-    function login(request, response) {
-        var user = userService.login(request);
-        if (user === null) {
-            responseModel.success = false;
-            response.status(403).json(responseModel);
-        } else {
-            responseModel.data = user;
-            response.status(200).json(responseModel);
-        }
-    }
+    userRouter.post('/' , userController.get);
 
     return userRouter;
 };
