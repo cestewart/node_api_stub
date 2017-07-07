@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+var loginRouter = require('./routes/loginRoutes')();
+app.use(config.routes.root + config.routes.login, loginRouter);
 var userRouter = require('./routes/userRoutes')();
 app.use(config.routes.root + config.routes.users, userRouter);
 var locationRouter = require('./routes/locationRoutes')();

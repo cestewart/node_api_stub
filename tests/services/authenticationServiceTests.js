@@ -10,12 +10,12 @@ describe('Authorization Service Tests:', function(){
 
             should(authenticationService.createToken(undefined)).be.a.null();
             should(authenticationService.createToken(null)).be.a.null();
-        }),
+        });
         it('should return token', function(){
             var user = {
                 id: '95da18d2-1968-476e-bab8-799598c9962e',
                 username: 'melissajones'
-            }
+            };
 
             var jwt = require('jsonwebtoken');
             var config = require('../../config');
@@ -24,16 +24,16 @@ describe('Authorization Service Tests:', function(){
 
             var result = authenticationService.createToken(user);
 
-            result.should.not.equal(null)
+            result.should.not.equal(null);
             result.should.be.a.String();
-        })
-    }),
+        });
+    });
     describe('verifyToken', function() {
         it('should return decoded token', function() {
             var user = {
                 id: '95da18d2-1968-476e-bab8-799598c9962e',
                 username: 'melissajones'
-            }
+            };
 
             var jwt = require('jsonwebtoken');
             var config = require('../../config');
@@ -46,12 +46,12 @@ describe('Authorization Service Tests:', function(){
 
             result.iss.should.be.a.String();
             result.username.should.be.a.String();
-        }),
+        });
         it('should return null', function() {
             var user = {
                 id: '95da18d2-1968-476e-bab8-799598c9962e',
                 username: 'melissajones'
-            }
+            };
 
             var jwt = require('jsonwebtoken');
             var config = require('../../config');
@@ -63,6 +63,6 @@ describe('Authorization Service Tests:', function(){
             var result = authenticationService.verifyToken(signedToken + '_broken');
 
             should(result).be.a.null();
-        })
-    })
-})
+        });
+    });
+});

@@ -1,88 +1,96 @@
 var should = require('should');
 var sinon = require('sinon');
-var bcryptStub = { };
-var authenticationServiceStub = {};
 
 describe('User Service Tests:', function() {
-    describe('getUserByUsername', function(){
+    describe('getByUsername', function(){
         it('should return a user', function() {
-            var userService = require('../../services/userService')(bcryptStub, authenticationServiceStub);
+            var userService = require('../../services/userService')(require('lodash'));
 
-            var results = userService.getUserByUsername('bobsmith');
+            var results = userService.getByUsername('bobsmith');
 
             results.id.should.be.exactly('7cafedfb-616c-4093-bec6-b167bcd18ca8');
-        }),
+        });
         it('should NOT return a user', function() {
-            var userService = require('../../services/userService')(bcryptStub, authenticationServiceStub);
+            var userService = require('../../services/userService')(require('lodash'));
 
-            var results = userService.getUserByUsername('bobsmithy');
+            var results = userService.getByUsername('bobsmithy');
 
             should(results).be.a.undefined();
-        })
-    }),
-    describe('login', function() {
-        it('should return a user', function () {
-            var request = {
-                body: {
-                    username: 'georgejones',
-                    password: 'secret'
-                }
-            }
+        });
+    });
+    describe('getById', function(){
+        it('should return a user', function() {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            var bcrypt = require('bcrypt');
+            var results = userService.getById('7cafedfb-616c-4093-bec6-b167bcd18ca8');
 
-            var authenticationService = {
-                createToken: sinon.spy()
-            }
+            results.username.should.be.exactly('bobsmith');
+        });
+        it('should NOT return a user', function() {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            var userService = require('../../services/userService')(bcrypt, authenticationService);
+            var results = userService.getById('missing id');
 
-            var results = userService.login(request);
+            should(results).be.a.undefined();
+        });
+    });
+    describe('getAll', function() {
+        it('should get all users', function () {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            results.username.should.be.a.String();
+            should(userService.getAll().length).be.exactly(4);
+        });
+    });
+    describe('addUser', function() {
+        it('should add a user', function () {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            authenticationService.createToken.calledOnce.should.equal(true);
-        }),
-        it('should NOT return a user when username is not found', function () {
-            var request = {
-                body: {
-                    username: 'georgejjjjones',
-                    password: 'secret'
-                }
-            }
+            var user = {
+                id: '1577f584-b21d-4d21-8ee7-7d2698283176',
+                firstName: 'Tester',
+                lastName: 'Smithy',
+                username: 'tsmith',
+                password: '$2a$10$u4ONtuiO9bKjdMODbeXtzO1OauSlYm.bxb1VihX9uhHqbT0hOmFBG'
+            };
 
-            var authenticationService = {
-                createToken: sinon.spy()
-            }
+            var count = userService.getAll().length;
 
-            var userService = require('../../services/userService')(bcryptStub, authenticationService);
+            userService.addUser(user);
 
-            var results = userService.login(request);
+            should(userService.getAll().length).be.exactly(count + 1);
+        });
+    });
+    describe('deleteUser', function() {
+        it('should delete a user', function () {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            should(results).be.a.null();
-            authenticationService.createToken.called.should.equal(false);
-        }),
-        it('should NOT return a user when password is invalid', function () {
-            var request = {
-                body: {
-                    username: 'georgejones',
-                    password: 'secretsss'
-                }
-            }
+            var user = {
+                id: 'df9980bc-6b79-4fe3-8bbc-5a81c7b88e0b'
+            };
 
-            var bcrypt = require('bcrypt');
+            var count = userService.getAll().length;
 
-            var authenticationService = {
-                createToken: sinon.spy()
-            }
+            userService.deleteUser(user);
 
-            var userService = require('../../services/userService')(bcrypt, authenticationService);
+            should(userService.getAll().length).be.exactly(count - 1);
+        });
+    });
+    describe('updateUser', function() {
+        it('should update a user', function () {
+            var userService = require('../../services/userService')(require('lodash'));
 
-            var results = userService.login(request);
+            var user =         {
+                id: '95da18d2-1968-476e-bab8-799598c9962e',
+                firstName: 'Melissa',
+                lastName: 'Smith',
+                username: 'melissajones',
+                password: '$2a$10$u4ONtuiO9bKjdMODbeXtzO1OauSlYm.bxb1VihX9uhHqbT0hOmFBG'
+            };
 
-            should(results).be.a.null();
-            authenticationService.createToken.called.should.equal(false);
-        })
-    })
-})
+            userService.updateUser(user);
+
+            should(userService.getById('95da18d2-1968-476e-bab8-799598c9962e').lastName).be.exactly('Smith');
+        });
+    });
+});
 

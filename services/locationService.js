@@ -26,9 +26,27 @@ var locationService = function (_) {
         return _.find(locations, {id:id})
     }
 
+    function addLocation(location) {
+        locations.push(location);
+    }
+
+    function updateLocation(location) {
+        deleteLocation(location);
+        addLocation(location);
+    }
+
+    function deleteLocation(location) {
+        _.remove(locations, {
+            id: location.id
+        });
+    }
+
     return {
         getAllLocations: getAllLocations,
-        getLocation: getLocation
+        getLocation: getLocation,
+        addLocation: addLocation,
+        updateLocation: updateLocation,
+        deleteLocation: deleteLocation
     }
 };
 

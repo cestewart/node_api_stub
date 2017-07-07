@@ -1,6 +1,6 @@
 'use strict';
 
-var userService = function (bcrypt, _, authenticationService) {
+var userService = function (_) {
     var users = [
         {
             id: 'd20ed1a1-4650-4d8f-9df7-5faa91363341',
@@ -32,21 +32,40 @@ var userService = function (bcrypt, _, authenticationService) {
         }
     ];
 
-    function getUserByUsername(username) {
+    function getByUsername(username) {
         return _.find(users, {username:username});
     }
 
-    function login(request) {
-        var user = getUserByUsername(request.body.username);
-        if (user === undefined) return null;
-        if (!bcrypt.compareSync(request.body.password, user.password)) return null;
-        user.token = authenticationService.createToken(user);
-        return user;
+    function getById(id) {
+        return _.find(users, {id:id});
+    }
+
+    function getAll() {
+        return users;
+    }
+
+    function addUser(user) {
+        users.push(user);
+    }
+
+    function updateUser(user) {
+        deleteUser(user);
+        addUser(user);
+    }
+
+    function deleteUser(user) {
+        _.remove(users, {
+            id: user.id
+        });
     }
 
     return {
-        getUserByUsername: getUserByUsername,
-        login: login,
+        getByUsername: getByUsername,
+        getById: getById,
+        getAll: getAll,
+        addUser: addUser,
+        updateUser: updateUser,
+        deleteUser: deleteUser
     }
 };
 

@@ -1,19 +1,14 @@
 'use strict';
 
 var userController = function (userService, responseModel) {
-    function get(request, response) {
-        var user = userService.login(request);
-        if (user === null) {
-            responseModel.success = false;
-            response.status(403).json(responseModel);
-        } else {
-            responseModel.data = user;
-            response.status(200).json(responseModel);
-        }
+    function getById(request, response) {
+        responseModel.data = userService.getById(request.params.id);
+        response.status(200);
+        response.send(responseModel);
     }
 
     return {
-        get: get
+        getById: getById
     }
 }
 

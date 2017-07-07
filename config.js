@@ -3,6 +3,7 @@
 module.exports = {
     routes: {
         root: '/api',
+        login: '/login',
         users: '/users',
         locations: '/locations'
     },

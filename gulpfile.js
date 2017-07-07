@@ -20,13 +20,12 @@ gulp.task('default', function(){
 });
 
 gulp.task('run-tests', function(){
-    env({vars:{ENV:'Test'}});
     gulp.src('tests/**/*.js', {read: false})
         .pipe(gulpMocha({reporter: 'dot'}))
 })
 
 gulp.task('test', ['run-tests'], function() {
-    gulp.watch('tests/**/*.js', ['run-tests'])
+    gulp.watch('./tests/**/*.js', ['run-tests'])
 });
 
 gulp.task('run-integration-tests', function(){
