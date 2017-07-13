@@ -16,5 +16,6 @@ module.exports = {
     jwt: {
         password: '8ynK#Hsz}_%uZL~5B@fNSC',
         durationInHours: 8
-    }
+    },
+    disableAuthorization: false
 };

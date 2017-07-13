@@ -1,12 +1,10 @@
 var should = require('should');
 var sinon = require('sinon');
-var jwtStub = {};
-var configStub = {};
 
 describe('Authorization Service Tests:', function(){
     describe('createToken', function() {
         it('should return null when user is null', function(){
-            var authenticationService = require('../../services/authenticationService')(jwtStub, configStub);
+            var authenticationService = require('../../services/authenticationService')(require('jsonwebtoken'),(require('../../config')));
 
             should(authenticationService.createToken(undefined)).be.a.null();
             should(authenticationService.createToken(null)).be.a.null();
@@ -17,10 +15,7 @@ describe('Authorization Service Tests:', function(){
                 username: 'melissajones'
             };
 
-            var jwt = require('jsonwebtoken');
-            var config = require('../../config');
-
-            var authenticationService = require('../../services/authenticationService')(jwt, config);
+            var authenticationService = require('../../services/authenticationService')(require('jsonwebtoken'),(require('../../config')));
 
             var result = authenticationService.createToken(user);
 
@@ -29,40 +24,55 @@ describe('Authorization Service Tests:', function(){
         });
     });
     describe('verifyToken', function() {
-        it('should return decoded token', function() {
-            var user = {
-                id: '95da18d2-1968-476e-bab8-799598c9962e',
-                username: 'melissajones'
+        it('should return 401 when token is missing', function() {
+            var authenticationService = require('../../services/authenticationService')(require('jsonwebtoken'),(require('../../config')));
+
+            var request = { headers: {} };
+            var response = {
+                status: sinon.spy(),
+                end: sinon.spy()
             };
+            var nextSpy = sinon.spy();
 
-            var jwt = require('jsonwebtoken');
-            var config = require('../../config');
+            authenticationService.verifyToken(request, response, nextSpy);
 
-            var authenticationService = require('../../services/authenticationService')(jwt, config);
-
-            var signedToken = authenticationService.createToken(user);
-
-            var result = authenticationService.verifyToken(signedToken);
-
-            result.iss.should.be.a.String();
-            result.username.should.be.a.String();
+            response.status.calledWith(401).should.equal(true, 'Bad Status ' + response.status.args[0][0]);
+            response.end.calledWith('Access token is missing').should.equal(true, 'Invalid message "' + response.end.args[0][0] + '"');
+            should(nextSpy.called).be.False();
         });
-        it('should return null', function() {
-            var user = {
-                id: '95da18d2-1968-476e-bab8-799598c9962e',
-                username: 'melissajones'
+        it('should return 401 when token is invalid', function() {
+            var authenticationService = require('../../services/authenticationService')(require('jsonwebtoken'),(require('../../config')));
+
+            var request = { headers: { authorization: 'badtoken' } };
+            var response = {
+                status: sinon.spy(),
+                end: sinon.spy()
             };
+            var nextSpy = sinon.spy();
 
-            var jwt = require('jsonwebtoken');
-            var config = require('../../config');
+            authenticationService.verifyToken(request, response, nextSpy);
 
-            var authenticationService = require('../../services/authenticationService')(jwt, config);
+            response.status.calledWith(401).should.equal(true, 'Bad Status ' + response.status.args[0][0]);
+            response.end.calledWith('Access token is invalid').should.equal(true, 'Invalid message "' + response.end.args[0][0] + '"');
+            should(nextSpy.called).be.False();
+        });
+        it('should call next when token is valid', function() {
+            var authenticationService = require('../../services/authenticationService')(require('jsonwebtoken'), require('../../config'));
 
-            var signedToken = authenticationService.createToken(user);
+            var token = authenticationService.createToken({ username:'testuser', id:'b4349d14-1cd6-48f2-972e-aefd1ec88c78' });
 
-            var result = authenticationService.verifyToken(signedToken + '_broken');
+            var request = { headers: { authorization: token } };
+            var response = {
+                status: sinon.spy(),
+                end: sinon.spy()
+            };
+            var nextSpy = sinon.spy();
 
-            should(result).be.a.null();
+            authenticationService.verifyToken(request, response, nextSpy);
+
+            should(nextSpy.called).be.True();
+            should(response.status.called).be.False();
+            should(response.end.called).be.False();
         });
     });
 });

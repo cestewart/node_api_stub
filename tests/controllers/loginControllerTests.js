@@ -41,6 +41,3 @@ describe('Login Controller Tests:', function(){
         });
     });
 });
-
-
-
